@@ -1,5 +1,4 @@
-[기자재관리_모바일_v2.21-03.html](https://github.com/user-attachments/files/27694559/_._v2.21-03.html)
-# Equipment-management
+[index.html](https://github.com/user-attachments/files/27694601/index.html)
 <!DOCTYPE html>
 <html lang="ko">
 <head>
