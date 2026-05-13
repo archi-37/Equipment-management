@@ -801,3 +801,43 @@ render();
 </script>
 </body>
 </html>
+
+<script>
+/* 디자인(순백색) 강제 고정 패치 */
+(function() {
+    const logoArea = document.querySelector('.logo');
+    if (logoArea) {
+        // 1. 원본 디자인 구조 복원 및 강원대학교 문구 유지
+        logoArea.innerHTML = `<span id="app-title-text" style="color: #ffffff !important; font-size: 15px !important; font-weight: 700 !important; letter-spacing: -0.3px !important; text-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;">도시건축학과 기자재 관리</span> <div class="v-btn" onclick="openVModal()">💡</div> <span style="opacity:.6; font-weight:400; margin-left:8px; font-size:12px; color:#ffffff !important;">강원대학교</span>`;
+    }
+
+    // 2. 저장된 제목 데이터 불러오기 (데이터가 있으면 텍스트만 교체)
+    let info = JSON.parse(localStorage.getItem('appInfo') || '{}');
+    const titleSpan = document.getElementById('app-title-text');
+    if (info.title && titleSpan) {
+        titleSpan.textContent = info.title;
+    }
+
+    // 3. 수정 및 저장 로직 (기존 원본 기능 보존)
+    const oriUnlock = window.unlockVEdit;
+    window.unlockVEdit = function() {
+        if (typeof oriUnlock === 'function') oriUnlock();
+        const editMode = document.getElementById('v-edit-mode');
+        if (editMode && !document.getElementById('v-title-input')) {
+            const div = document.createElement('div');
+            div.className = 'fg';
+            div.innerHTML = `<label class="fl">앱 제목(학과명)</label><input type="text" id="v-title-input" class="fc2" style="width:100%">`;
+            editMode.prepend(div);
+            document.getElementById('v-title-input').value = document.getElementById('app-title-text').textContent;
+        }
+    };
+
+    const oriSave = window.saveVInfo;
+    window.saveVInfo = function() {
+        const newTitle = document.getElementById('v-title-input').value;
+        if (typeof appInfo !== 'undefined') appInfo.title = newTitle;
+        document.getElementById('app-title-text').textContent = newTitle;
+        if (typeof oriSave === 'function') oriSave();
+    };
+})();
+</script>
